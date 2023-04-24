@@ -3,6 +3,7 @@
 #include <stdlib.h>
 // #include <stdbool.h>
 #include <math.h>
+#include "Console.h"
 
 #define MATH_M_PI_2 M_PI_2
 
@@ -16,9 +17,9 @@ float MathSqrt(float value)
 }
 float MathClamp(float value, float min, float max)
 {
-    float result = (value < min)? min : value;
-    if (result > max) result = max;
-    return result;
+    if (value < min) { return min; };
+    if (value > max) { return max; };
+    return value;
 }
 int MathSign(float value)
 {
@@ -34,9 +35,26 @@ float MathMod(float value, float div)
 {
     return fmodf(value,div);
 }
-float MathPingPong(float value, float div)
+float MathPingPong(float value, float length)
 {
-    int whole = value/div;
-    float rem = fmodf(value,div);
-    return whole % 2 == 0 ? rem : div-rem;
+    if (value < 0) { value = length + MathAbs(value); }
+    int whole = value/length;
+    float rem = fmodf(value,length);
+    return whole % 2 == 0 ? rem : length-rem;
+}
+void MathPingPong2(float value, float length, float* valueNew, int* directionNew)
+{
+    if (value < 0) { value = length + MathAbs(value); }
+    int whole = value/length;
+    float rem = fmodf(value,length);
+    if (whole % 2 == 0)
+    {
+        *directionNew = 1;
+        *valueNew = rem;
+    }
+    else
+    {
+        *directionNew = -1;
+        *valueNew = length-rem;
+    }
 }

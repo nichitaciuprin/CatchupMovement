@@ -1,60 +1,23 @@
-#include "raylib.h"
-#include "raymath.h"
+#include "Vector2.h"
 #include "Math.h"
 #include "Time.h"
 #include "Console.h"
 #include "Window.h"
 
-const int m_windowWidth = 1200;
-const int m_windowHeight = 400;
-const int m_centerX = m_windowWidth/2;
-const int m_centerY = m_windowHeight/2;
-const int m_windowBorderSize = 100;
-Vector2 m_Bpos = {m_centerX,m_centerY};
-Vector2 m_Bvel = {0,0};
-Vector2 m_Apos = {50,m_centerY};
-Vector2 m_Avel = {0,0};
-Vector2 m_oldMousePosition = {0,0};
-Vector2 m_newMousePosition = {0,0};
-float m_Bpos2 = m_centerX-m_windowBorderSize;
-int state = 0;
+float _Apos = WindowXLeft;
+float _Avel = 0;
+float _Bpos = WindowXCenter;
+float _Bvel = 0;
+int _state = 0;
 
-Vector2 BVelocity(float time, float windowWidth, float offset)
+float GetSpeed(float position)
 {
-    Vector2 result;
-    time += windowWidth - offset*2;
-    float length = windowWidth - offset*2;
-    int direction = (int)(time/length) % 2 == 0 ? 1 : -1;
-    result.x = 300*direction;
-    result.y = 0;
-    return result;
-}
-Vector2 BPosition(float time, float windowWidth, float windowHeight, float offset)
-{
-    Vector2 result;
-    time += windowWidth - offset*2;
-    float length = windowWidth - offset*2;
-    // MathMod(time,12);
-    // float rem = time;
-    result.x = offset + MathPingPong(time,length);
-    result.y = windowHeight/2;
-    return result;
-}
-
-Vector2 GetMouseVelocity(Vector2 oldMousePosition, Vector2 newMousePosition, float deltaTime)
-{
-    Vector2 diff = Vector2Subtract(newMousePosition,oldMousePosition);
-    diff.x /= deltaTime;
-    diff.y /= deltaTime;
-    return diff;
-}
-Vector2 TargetPosition(int windowWidth, int windowHeight, int mouseX)
-{
-    float centerX = Clamp(GetMouseX(),50,windowWidth-50);
-    Vector2 result = {centerX,windowHeight/2};
-    return result;
-    // Vector2 result = {windowWidth/2,windowHeight/2};
-    // return result;
+    float cap = 3000;
+    float duno = fmodf(position,cap);
+    float t = MathInverseLerp(0,cap,duno);
+    if (t < 0.2f) return 100;
+    if (t < 0.5f) return 200;
+    return 300;
 }
 void Catchup(float* Apos, float* Avel, float Aacc, float Bpos, float Bvel, float deltaTime)
 {
@@ -112,90 +75,53 @@ void Catchup(float* Apos, float* Avel, float Aacc, float Bpos, float Bvel, float
 
     *Apos += (*Avel)*deltaTime;
 }
-float GetSpeed(float position)
+void UpdateA(float* Apos, float* Avel, float Bpos, float Bvel, float deltaTime)
 {
-    float cap = 3000;
-    float duno = fmodf(position,cap);
-    float t = MathInverseLerp(0,cap,duno);
-    if (t < 0.2f) return 100;
-    if (t < 0.5f) return 200;
-    return 300;
+    Catchup(&_Apos,&_Avel,600,_Bpos,_Bvel,deltaTime);
 }
-void Init()
+void UpdateB(float* Bpos, float* Bvel, float deltaTime)
 {
-    m_oldMousePosition = GetMousePosition();
-    m_newMousePosition = GetMousePosition();
-}
-void HandleInput()
-{
-    if (IsKeyPressed('1'))
-    {
-        state = 0;
-        return;
-    }
-    if (IsKeyPressed('2'))
-    {
-        state = 1;
-        return;
-    }
-}
-void Update(float deltaTime)
-{
-    const float m_Aacc = 600;
-
-    Catchup(&m_Apos.x,&m_Avel.x,m_Aacc,m_Bpos.x,m_Bvel.x,deltaTime);
-    m_Apos.y = m_Bpos.y;
-
-    switch (state)
+    switch (_state)
     {
         case 0:
         {
-            float speed = GetSpeed(m_Bpos2);
-            m_Bpos2 += speed*deltaTime;
-            float oldDuno = m_Bpos.x;
-            m_Bpos.x = m_windowBorderSize + MathPingPong(m_Bpos2,m_windowWidth-m_windowBorderSize*2);
-            float newDuno = m_Bpos.x;
-            float vel = newDuno-oldDuno;
-            int sign = MathSign(vel);
-            m_Bvel.x = speed*sign;
+            // *Bpos += GetSpeed(*Bpos)*deltaTime;
+            // _Bpos = WindowXLeft + MathPingPong((*Bpos)-WindowXLeft,WindowWidth2);
             break;
         }
         case 1:
         {
-            m_newMousePosition = GetMousePosition();
-            m_Bvel = GetMouseVelocity(m_oldMousePosition,m_newMousePosition,deltaTime);
-            m_Bpos = TargetPosition(m_windowWidth,m_windowHeight,m_newMousePosition.x);
-            m_oldMousePosition = m_newMousePosition;
+            *Bpos = WindowMousePosition.x;
+            *Bvel = WindowMouseVelocity.x;
             break;
         }
     }
-
+}
+void HandleInput()
+{
+    if (IsKeyPressed('1')) { _state = 0; return; }
+    if (IsKeyPressed('2')) { _state = 1; return; }
+}
+void Update(float deltaTime)
+{
+    UpdateB(&_Bpos,&_Bvel,deltaTime);
+    UpdateA(&_Apos,&_Avel,_Bpos,_Bvel,deltaTime);
 }
 int main(void)
 {
-    long fps = 60;
-    long timeStep = CLOCKS_PER_SEC/fps;
-    float deltaTime = 0.020f;
-    long oldTime = 0;
-    long newTime = 0;
-
-    {
-        oldTime = TimeNow();
-        WindowCreate();
-        Init();
-        newTime = TimeNow();
-        TimeWaitLoop(oldTime,newTime,timeStep);
-    }
+    WindowUpdate(_Apos,_Bpos);
+    HandleInput();
+    TimeWaitLoopMark();
 
     while (true)
     {
         if (WindowMustClose()) break;
 
-        oldTime = TimeNow();
-        Update(deltaTime);
-        WindowUpdate(m_Apos.x,m_Bpos.x);
-        newTime = TimeNow();
-        TimeWaitLoop(oldTime,newTime,timeStep);
+        Update(TimeFixedDeltaTimef);
+
+        WindowUpdate(_Apos,_Bpos);
+        HandleInput();
+        TimeWaitLoopMark();
     }
 
     return 0;
