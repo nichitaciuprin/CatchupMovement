@@ -1,7 +1,7 @@
 #pragma once
 
 #include <stdlib.h>
-#include <stdbool.h>
+// #include <stdbool.h>
 #include <math.h>
 
 #define MATH_M_PI_2 M_PI_2

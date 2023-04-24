@@ -1,14 +1,8 @@
-#include <stdlib.h>
-#include <stdbool.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <time.h>
-#include "math.h"
 #include "raylib.h"
 #include "raymath.h"
 #include "Math.h"
 #include "Time.h"
-
+#include "Console.h"
 
 const int m_windowWidth = 1200;
 const int m_windowHeight = 400;
@@ -179,7 +173,7 @@ void Update(float deltaTime)
 void WindowInit()
 {
     InitWindow(m_windowWidth, m_windowHeight, "CatchupMovement");
-    printf("Window inited\n");
+    ConsoleWriteLineStr("Window inited");
 }
 void WindowUpdate()
 {

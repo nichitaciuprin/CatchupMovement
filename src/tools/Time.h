@@ -1,9 +1,7 @@
 #pragma once
 
-#include <stdlib.h>
-#include <stdbool.h>
-#include <math.h>
 #include <time.h>
+#include <unistd.h>
 
 long TimeNow()
 {
