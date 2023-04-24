@@ -8,6 +8,7 @@ float _Apos = WindowXLeft;
 float _Avel = 0;
 float _Bpos = WindowXCenter;
 float _Bvel = 0;
+float _Bpos2 = 0;
 int _state = 0;
 
 float GetSpeed(float position)
@@ -77,7 +78,12 @@ void Catchup(float* Apos, float* Avel, float Aacc, float Bpos, float Bvel, float
 }
 void UpdateA(float* Apos, float* Avel, float Bpos, float Bvel, float deltaTime)
 {
-    Catchup(&_Apos,&_Avel,600,_Bpos,_Bvel,deltaTime);
+    ConsoleWriteLineFloat(*Apos);
+    ConsoleWriteLineFloat(*Avel);
+    ConsoleWriteLineFloat(Bpos);
+    ConsoleWriteLineFloat(Bvel);
+    ConsoleWriteLineStr("---------");
+    Catchup(&_Apos,&_Avel,100,_Bpos,_Bvel,deltaTime);
 }
 void UpdateB(float* Bpos, float* Bvel, float deltaTime)
 {
@@ -85,8 +91,10 @@ void UpdateB(float* Bpos, float* Bvel, float deltaTime)
     {
         case 0:
         {
+            // _Bpos2 += 100*deltaTime;
             // *Bpos += GetSpeed(*Bpos)*deltaTime;
-            // _Bpos = WindowXLeft + MathPingPong((*Bpos)-WindowXLeft,WindowWidth2);
+            // *Bpos = WindowXLeft + MathPingPong(WindowWidth2/2+_Bpos2,WindowWidth2);
+            // _Bpos2 = MathPingPong(_Bpos2+deltaTime,WindowWidth2);
             break;
         }
         case 1:
@@ -97,15 +105,15 @@ void UpdateB(float* Bpos, float* Bvel, float deltaTime)
         }
     }
 }
-void HandleInput()
-{
-    if (IsKeyPressed('1')) { _state = 0; return; }
-    if (IsKeyPressed('2')) { _state = 1; return; }
-}
 void Update(float deltaTime)
 {
     UpdateB(&_Bpos,&_Bvel,deltaTime);
     UpdateA(&_Apos,&_Avel,_Bpos,_Bvel,deltaTime);
+}
+void HandleInput()
+{
+    if (IsKeyPressed('1')) { _state = 0; return; }
+    if (IsKeyPressed('2')) { _state = 1; return; }
 }
 int main(void)
 {
