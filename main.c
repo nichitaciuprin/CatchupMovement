@@ -3,6 +3,7 @@
 #include "Math.h"
 #include "Time.h"
 #include "Console.h"
+#include "Window.h"
 
 const int m_windowWidth = 1200;
 const int m_windowHeight = 400;
@@ -170,22 +171,6 @@ void Update(float deltaTime)
     }
 
 }
-void WindowInit()
-{
-    InitWindow(m_windowWidth, m_windowHeight, "CatchupMovement");
-    ConsoleWriteLineStr("Window inited");
-}
-void WindowUpdate()
-{
-    BeginDrawing();
-    ClearBackground(BLACK);
-    DrawLine(m_windowBorderSize,m_centerY,m_windowWidth-m_windowBorderSize,m_centerY,DARKGREEN);
-    const float radius = 10;
-    DrawCircle(m_Bpos.x,m_Bpos.y,radius,WHITE);
-    DrawCircle(m_Apos.x,m_Apos.y,radius,RED);
-    DrawText("1-auto 2-manual",20,20,30,WHITE);
-    EndDrawing();
-}
 int main(void)
 {
     long fps = 60;
@@ -194,27 +179,24 @@ int main(void)
     long oldTime = 0;
     long newTime = 0;
 
-
     {
         oldTime = TimeNow();
+        WindowCreate();
         Init();
-        WindowInit();
         newTime = TimeNow();
         TimeWaitLoop(oldTime,newTime,timeStep);
     }
 
     while (true)
     {
-        if (WindowShouldClose()) break;
+        if (WindowMustClose()) break;
 
         oldTime = TimeNow();
         Update(deltaTime);
-        WindowUpdate();
+        WindowUpdate(m_Apos.x,m_Bpos.x);
         newTime = TimeNow();
         TimeWaitLoop(oldTime,newTime,timeStep);
     }
-
-    CloseWindow();
 
     return 0;
 }
