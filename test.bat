@@ -8,9 +8,9 @@ set warnings=^
 -Wundef -fdiagnostics-show-option
 
 set libs=-lraylib -lpthread
-set include=src\tools
+set include=src
 set appname=test
-set exefile=build/%appname%.exe
+set exefile=build\%appname%.exe
 
 if not exist build (mkdir build)
 cc %appname%.c -o %exefile% -g -I%include% %libs% %warnings%

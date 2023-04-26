@@ -78,11 +78,11 @@ void Catchup(float* Apos, float* Avel, float Aacc, float Bpos, float Bvel, float
 }
 void UpdateA(float* Apos, float* Avel, float Bpos, float Bvel, float deltaTime)
 {
-    ConsoleWriteLineFloat(*Apos);
-    ConsoleWriteLineFloat(*Avel);
-    ConsoleWriteLineFloat(Bpos);
-    ConsoleWriteLineFloat(Bvel);
-    ConsoleWriteLineStr("---------");
+    // ConsoleWriteLineFloat(*Apos);
+    // ConsoleWriteLineFloat(*Avel);
+    // ConsoleWriteLineFloat(Bpos);
+    // ConsoleWriteLineFloat(Bvel);
+    // ConsoleWriteLineStr("---------");
     Catchup(&_Apos,&_Avel,100,_Bpos,_Bvel,deltaTime);
 }
 void UpdateB(float* Bpos, float* Bvel, float deltaTime)

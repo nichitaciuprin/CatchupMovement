@@ -1,7 +1,12 @@
-#include <stdio.h>
+#include <stdbool.h>
+#include "tools/Time.h"
 
 int main(void)
 {
-    printf("HI\n");
+    while (true)
+    {
+        printf("HI\n");
+        TimeWaitClocks(CLOCKS_PER_SEC);
+    }
     return 0;
 }
