@@ -1,8 +1,8 @@
-#include "Vector2.h"
-#include "Math.h"
-#include "Time.h"
-#include "Console.h"
-#include "Window.h"
+#include "tools/Vector2.h"
+#include "tools/Math.h"
+#include "tools/Time.h"
+#include "tools/Console.h"
+#include "tools/Window.h"
 
 float _Apos = WindowXLeft;
 float _Avel = 0;
@@ -14,7 +14,7 @@ int _state = 0;
 float GetSpeed(float position)
 {
     float cap = 3000;
-    float duno = fmodf(position,cap);
+    float duno = MathMod(position,cap);
     float t = MathInverseLerp(0,cap,duno);
     if (t < 0.2f) return 100;
     if (t < 0.5f) return 200;
