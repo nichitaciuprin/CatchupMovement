@@ -1,9 +1,8 @@
 #pragma once
 
 #include <stdlib.h>
-// #include <stdbool.h>
 #include <math.h>
-#include "Console.h"
+#include "raymath.h"
 
 #define MATH_M_PI_2 M_PI_2
 
