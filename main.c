@@ -117,7 +117,7 @@ void HandleInput()
 }
 int main(void)
 {
-    WindowUpdate(_Apos,_Bpos);
+    WindowRender(_Apos,_Bpos);
     HandleInput();
     TimeWaitLoopMark();
 
@@ -127,7 +127,7 @@ int main(void)
 
         Update(TimeFixedDeltaTimef);
 
-        WindowUpdate(_Apos,_Bpos);
+        WindowRender(_Apos,_Bpos);
         HandleInput();
         TimeWaitLoopMark();
     }

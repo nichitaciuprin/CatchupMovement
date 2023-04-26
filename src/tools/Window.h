@@ -31,7 +31,7 @@ void WindowCreate()
     InitWindow(WindowWidth, WindowHeight, "CatchupMovement");
     ConsoleWriteLineStr("Window: Inited");
 }
-void WindowUpdate(float Apos, float Bpos)
+void WindowRender(float Apos, float Bpos)
 {
     WindowCreate();
     MouseUpdate();
