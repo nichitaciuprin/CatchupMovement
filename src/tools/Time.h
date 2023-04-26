@@ -2,17 +2,15 @@
 
 #include <unistd.h>
 #include <time.h>
-#include "Console.h"
 
-long TimeAll = 0;
-long TimeClockOld = 0;
-long TimeClockNew = 0;
+clock_t TimeAll = 0;
+clock_t TimeClockOld = 0;
+clock_t TimeClockNew = 0;
 
 #define TimeFPS 60
-const long TimeFixedDeltaTime = CLOCKS_PER_SEC/TimeFPS;
-const float TimeFixedDeltaTimef = 1.0f/TimeFPS;
-const double TimeClockPerSecFloat = (double)CLOCKS_PER_SEC;
-
+const clock_t TimeFixedDeltaTimeClock = CLOCKS_PER_SEC/TimeFPS;
+const float TimeFixedDeltaTimeFloat = 1.0f/TimeFPS;
+const double TimeClockPerSecFloat = CLOCKS_PER_SEC;
 
 clock_t TimeNow()
 {
@@ -37,8 +35,8 @@ void TimeWaitLoop(clock_t oldTime, clock_t newTime, int timeStep)
 }
 void TimeWaitLoopMark()
 {
-    TimeAll += TimeFixedDeltaTime;
+    TimeAll += TimeFixedDeltaTimeClock;
     TimeClockNew = TimeNow();
-    TimeWaitLoop(TimeClockOld,TimeClockNew,TimeFixedDeltaTime);
+    TimeWaitLoop(TimeClockOld,TimeClockNew,TimeFixedDeltaTimeClock);
     TimeClockOld = TimeNow();
 }

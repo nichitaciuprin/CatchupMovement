@@ -125,7 +125,7 @@ int main(void)
     {
         if (WindowMustClose()) break;
 
-        Update(TimeFixedDeltaTimef);
+        Update(TimeFixedDeltaTimeFloat);
 
         WindowRender(_Apos,_Bpos);
         HandleInput();
