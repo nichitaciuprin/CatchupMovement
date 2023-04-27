@@ -19,7 +19,7 @@ float GetSpeed(float position)
     float t = MathInverseLerp(0,cap,duno);
     if (t < 0.2f) return 100;
     if (t < 0.5f) return 200;
-                  return 300;
+    return 300;
 }
 void UpdateA(float* Apos, float* Avel, float Bpos, float Bvel, float deltaTime)
 {

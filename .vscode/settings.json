@@ -9,6 +9,7 @@
         "stdlib.h": "c",
         "window.h": "c",
         "console.h": "c",
-        "mathcatchup.h": "c"
+        "mathcatchup.h": "c",
+        "mathcatchup2.h": "c"
     }
 }

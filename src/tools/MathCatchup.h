@@ -3,11 +3,14 @@
 #include <stdbool.h>
 #include <tools/Math.h>
 
-void MathCatchup(float* Apos, float* Avel, float Aacc, float Bpos, float Bvel, float deltaTime)
+void MathCatchupMove(float* position, float* velocity, float acceleration, int direction, float time)
 {
-    float pos = *Apos - Bpos;
-    float vel = *Avel - Bvel;
-
+    float velocityOffset = direction*acceleration*time;
+    *position += (*velocity)*time + velocityOffset*time/2;
+    *velocity += velocityOffset;
+}
+void MathCatchupMoveInfo(float pos, float vel, float Aacc, int* direction, float* time1, float* time2)
+{
     float posAbs = MathAbs(pos);
     float velAbs = MathAbs(vel);
     float haltTime = velAbs/Aacc;
@@ -18,22 +21,18 @@ void MathCatchup(float* Apos, float* Avel, float Aacc, float Bpos, float Bvel, f
     int s3 = MathSign(vel);
     bool mustHalt = s1 != s2 || s1 == s3;
 
-    int direction = 0;
-    float time1 = 0;
-    float time2 = 0;
+    *direction = -s2;
 
-    direction = -s2;
-
-    // Edge case. Can happen if A halting directly to B position
-    if (direction == 0)
-        direction = s1;
+    // Edge case. Can happen if A halting directly to B position.
+    if (*direction == 0)
+        *direction = s1;
 
     if (mustHalt)
     {
         float area3 = MathAbs(pos2);
         float halfTime = MathSqrt(area3/Aacc);
-        time1 = halfTime + haltTime;
-        time2 = halfTime;
+        *time1 = halfTime + haltTime;
+        *time2 = halfTime;
     }
     else
     {
@@ -41,41 +40,37 @@ void MathCatchup(float* Apos, float* Avel, float Aacc, float Bpos, float Bvel, f
         float area2 = posAbs;
         float area3 = area1+area2;
         float halfTime = MathSqrt(area3/Aacc);
-        time1 = halfTime - haltTime;
-        time2 = halfTime;
+        *time1 = halfTime - haltTime;
+        *time2 = halfTime;
 
-        // Edge case. float calc can be inaccurate when A very close to B
-        if (time1 < 0) time1 = 0;
-
-        // TODO
-        // if (time1 < 0) return;
+        // Edge case. float calculation can be inaccurate when A is very close to B and results in negative time.
+        if (*time1 < 0) *time1 = 0;
     }
+}
+void MathCatchup(float* Apos, float* Avel, float Aacc, float Bpos, float Bvel, float deltaTime)
+{
+    float pos = *Apos - Bpos;
+    float vel = *Avel - Bvel;
+    int direction = 0;
+    float time1 = 0;
+    float time2 = 0;
+    MathCatchupMoveInfo(pos,vel,Aacc,&direction,&time1,&time2);
 
     int dir = direction;
     float t = time1;
 
-    {
-        t = Clamp(deltaTime,0,t);
-        deltaTime -= t;
-        float value1 = dir*Aacc*t;
-        *Apos += (*Avel)*t;
-        *Apos += value1*t/2;
-        *Avel += value1;
-        if (deltaTime == 0) return;
-    }
+    t = Clamp(deltaTime,0,t);
+    deltaTime -= t;
+    MathCatchupMove(Apos,Avel,Aacc,dir,t);
+    if (deltaTime == 0) return;
 
     dir = -direction;
     t = time2;
 
-    {
-        t = Clamp(deltaTime,0,t);
-        deltaTime -= t;
-        float value1 = dir*Aacc*t;
-        *Apos += (*Avel)*t;
-        *Apos += value1*t/2;
-        *Avel += value1;
-        if (deltaTime == 0) return;
-    }
+    t = Clamp(deltaTime,0,t);
+    deltaTime -= t;
+    MathCatchupMove(Apos,Avel,Aacc,dir,t);
+    if (deltaTime == 0) return;
 
     *Apos += (*Avel)*deltaTime;
 }
