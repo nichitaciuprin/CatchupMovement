@@ -14,6 +14,10 @@ float MathSqrt(float value)
 {
     return sqrtf(value);
 }
+double MathSqrt2(double value)
+{
+    return sqrt(value);
+}
 float MathClamp(float value, float min, float max)
 {
     if (value < min) { return min; };

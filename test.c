@@ -8,32 +8,54 @@ void Catchup(float* Apos, float* Avel, float Aacc, float Bpos, float Bvel, float
     float pos = *Apos - Bpos;
     float vel = *Avel - Bvel;
 
+    float posAbs = MathAbs(pos);
     float velAbs = MathAbs(vel);
     float haltTime = velAbs/Aacc;
-    float haltOffset = vel*haltTime;
-    float haltOffsetHalf = haltOffset/2;
-    float pos2 = pos+haltOffsetHalf;
+    float haltOffset = vel*haltTime/2;
+    float pos2 = pos+haltOffset;
     int s1 = MathSign(pos);
     int s2 = MathSign(pos2);
     int s3 = MathSign(vel);
-    bool isOvershoot = s1 == s3 || s1 != s2;
-    int s = isOvershoot ? 1 : -1;
-    int direction = -s2;
-    float time2 = MathSqrt(MathAbs(-pos-haltOffsetHalf*s)/Aacc/2);
-    float time1 = time2+haltTime*s;
-    printf("%i %f %f\n",direction,time1,time2);
-    // printf("%f %f\n",*Apos,Bpos);
-    // printf("%f\n",haltTime);
-    // printf("%i\n",s);
+    bool mustHalt = s1 != s2 || s1 == s3;
 
-    // TODO
-    if (time1 < 0)
+    int direction = 0;
+    float time1 = 0;
+    float time2 = 0;
+
+    direction = -s2;
+
+    // Edge case. Can happen if A halting directly to B position
+    if (direction == 0)
+        direction = s1;
+
+    if (mustHalt)
     {
-        // printf("pos == %.60f\n",pos);
-        // printf("vel == %.60f\n",vel);
-        // printf("!\n");
-        return;
+        float area3 = MathAbs(pos2);
+        float halfTime = MathSqrt(area3/Aacc);
+        time1 = halfTime + haltTime;
+        time2 = halfTime;
     }
+    else
+    {
+        float area1 = vel*vel/Aacc/2;
+        float area2 = posAbs;
+        float area3 = area1+area2;
+        float halfTime = MathSqrt(area3/Aacc);
+        time1 = halfTime - haltTime;
+        time2 = halfTime;
+
+        // Edge case. float calc can be inaccurate when A very close to B
+        if (time1 < 0) time1 = 0;
+
+        // TODO
+        // if (time1 < 0) return;
+    }
+
+    if (direction > 0)
+        printf(" %i",direction);
+    else
+        printf("%i",direction);
+    printf(" %f %f\n",time1,time2);
 
     int dir = direction;
     float t = time1;
@@ -68,25 +90,23 @@ int main(void)
     float Apos = 0;
     float Avel = 0;
     float Aacc = 2;
-    float Bpos = 100;
+    float Bpos = 50;
     float Bvel = 0;
     float deltaTimeSecods = 1;
 
     for (size_t i = 0; i < 10; i++)
-    {
         Catchup(&Apos,&Avel,Aacc,Bpos,Bvel,deltaTimeSecods);
-    }
 
     // Expected result
-    // 1 5.000000 5.000000
-    // 1 4.000000 5.000000
-    // 1 3.000000 5.000000
-    // 1 2.000000 5.000000
-    // 1 1.000000 5.000000
-    // 1 0.000000 5.000000
-    // 1 0.000000 4.000000
-    // 1 0.000000 3.000000
-    // 1 0.000000 2.000000
-    // 1 0.000000 1.000000
+    //  1 5.000000 5.000000
+    //  1 4.000000 5.000000
+    //  1 3.000000 5.000000
+    //  1 2.000000 5.000000
+    //  1 1.000000 5.000000
+    // -1 5.000000 0.000000
+    // -1 4.000000 0.000000
+    // -1 3.000000 0.000000
+    // -1 2.000000 0.000000
+    // -1 1.000000 0.000000
     return 0;
 }
