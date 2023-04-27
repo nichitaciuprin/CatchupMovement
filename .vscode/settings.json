@@ -8,6 +8,7 @@
         "stdio.h": "c",
         "stdlib.h": "c",
         "window.h": "c",
-        "console.h": "c"
+        "console.h": "c",
+        "mathcatchup.h": "c"
     }
 }
