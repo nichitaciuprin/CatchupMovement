@@ -6,34 +6,42 @@
 #include "tools/Window.h"
 
 float Apos = WindowXLeft;
-float Avel = 0;
 float Bpos = WindowXCenter;
+float BposDist = WindowLineLength/2;
+float Avel = 0;
 float Bvel = 0;
 int BState = 0;
 
-float Bspeed()
+float GetBvel()
 {
-    float cap = 3000;
-    float duno = MathMod(Bpos,cap);
-    float t = MathInverseLerp(0,cap,duno);
-    if (t < 0.2f) return 100;
-    if (t < 0.5f) return 200;
-    return 300;
+    float speed;
+    float speed1 = 80;
+    float speed2 = speed1*2;
+    float speed3 = speed1*3;
+    float range1 = 800;
+    float range2 = range1*2;
+    float range3 = range1*3;
+    float curentRange = MathMod(BposDist,range3);
+    if      (curentRange < range1) { speed = speed1; }
+    else if (curentRange < range2) { speed = speed2; }
+    else                           { speed = speed3; }
+    float mod = MathMod(BposDist,WindowLineLength*2);
+    int direction = mod < WindowLineLength ? 1 : -1;
+    return speed*direction;
 }
 void UpdateA(float deltaTime)
 {
-    MathCatchup(&Apos,&Avel,400,Bpos,Bvel,deltaTime);
+    MathCatchup(&Apos,&Avel,500,Bpos,Bvel,deltaTime);
 }
 void UpdateB(float deltaTime)
 {
-    switch (state)
+    switch (BState)
     {
         case 0:
         {
-            // Bpos2 += 100*deltaTime;
-            // *Bpos += Bspeed(*Bpos)*deltaTime;
-            // *Bpos = WindowXLeft + MathPingPong(WindowWidth2/2+Bpos2,WindowWidth2);
-            // Bpos2 = MathPingPong(Bpos2+deltaTime,WindowWidth2);
+            Bvel = GetBvel();
+            BposDist += MathAbs(Bvel)*deltaTime;
+            Bpos = WindowXLeft + MathPingPong(BposDist,WindowLineLength);
             break;
         }
         case 1:
