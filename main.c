@@ -9,8 +9,7 @@ float Apos = WindowXLeft;
 float Avel = 0;
 float Bpos = WindowXCenter;
 float Bvel = 0;
-float Bpos2 = 0;
-int state = 0;
+int BState = 0;
 
 float Bspeed()
 {
@@ -52,8 +51,8 @@ void Update(float deltaTime)
 }
 void HandleInput()
 {
-    if (IsKeyPressed('1')) { state = 0; return; }
-    if (IsKeyPressed('2')) { state = 1; return; }
+    if (IsKeyPressed('1')) { BState = 0; return; }
+    if (IsKeyPressed('2')) { BState = 1; return; }
 }
 int main(void)
 {
