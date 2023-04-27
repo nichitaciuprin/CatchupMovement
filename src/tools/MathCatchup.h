@@ -3,11 +3,12 @@
 #include <stdbool.h>
 #include <tools/Math.h>
 
-void MathCatchupMove(float* position, float* velocity, float acceleration, int direction, float time)
+void MathCatchupMove(float* pos, float* vel, float acc, int direction, float time)
 {
-    float velocityOffset = direction*acceleration*time;
-    *position += (*velocity)*time + velocityOffset*time/2;
-    *velocity += velocityOffset;
+    float velOffset = direction*acc*time;
+    float posOffset = (*vel)*time + velOffset*time/2;
+    *vel += velOffset;
+    *pos += posOffset;
 }
 void MathCatchupMoveInfo(float pos, float vel, float Aacc, int* direction, float* time1, float* time2)
 {
