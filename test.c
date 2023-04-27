@@ -14,6 +14,7 @@ int main(void)
     for (size_t i = 0; i < 10; i++)
     {
         MathCatchup(&Apos,&Avel,Aacc,Bpos,Bvel,deltaTimeSecods);
+        Bpos += Bvel*deltaTimeSecods;
         printf("%f %f\n",Apos,Avel);
     }
 
