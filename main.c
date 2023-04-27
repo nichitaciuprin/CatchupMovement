@@ -47,8 +47,8 @@ void UpdateB(float deltaTime)
 }
 void Update(float deltaTime)
 {
-    UpdateB(deltaTime);
     UpdateA(deltaTime);
+    UpdateB(deltaTime);
 }
 void HandleInput()
 {
