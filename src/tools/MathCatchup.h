@@ -60,7 +60,7 @@ void MathCatchup(float* Apos, float* Avel, float Aacc, float Bpos, float Bvel, f
     int dir = direction;
     float t = time1;
 
-    t = Clamp(deltaTime,0,t);
+    t = MathClamp(deltaTime,0,t);
     deltaTime -= t;
     MathCatchupMove(Apos,Avel,Aacc,dir,t);
     if (deltaTime == 0) return;
@@ -68,7 +68,7 @@ void MathCatchup(float* Apos, float* Avel, float Aacc, float Bpos, float Bvel, f
     dir = -direction;
     t = time2;
 
-    t = Clamp(deltaTime,0,t);
+    t = MathClamp(deltaTime,0,t);
     deltaTime -= t;
     MathCatchupMove(Apos,Avel,Aacc,dir,t);
     if (deltaTime == 0) return;
