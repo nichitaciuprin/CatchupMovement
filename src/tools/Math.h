@@ -22,7 +22,7 @@ float MathClamp(float value, float min, float max)
 {
     if (value < min) { return min; };
     if (value > max) { return max; };
-    return value;
+                       return value;
 }
 int MathSign(float value)
 {
@@ -40,6 +40,7 @@ float MathMod(float value, float div)
 }
 float MathPingPong(float value, float length)
 {
+    // TODO. Maybe wrong negative number logic
     if (value < 0) { value = length + MathAbs(value); }
     int whole = value/length;
     float rem = fmodf(value,length);
