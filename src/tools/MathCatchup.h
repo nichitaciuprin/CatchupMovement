@@ -10,7 +10,7 @@ void MathCatchupMove(float* pos, float* vel, float acc, int direction, float tim
     *vel += velOffset;
     *pos += posOffset;
 }
-void MathCatchupMoveInfo(float pos, float vel, float Aacc, int* direction, float* time1, float* time2)
+void MathCatchupMoveInfo(float pos, float vel, float Aacc, int* direction_out, float* time1_out, float* time2_out)
 {
     float posAbs = MathAbs(pos);
     float velAbs = MathAbs(vel);
@@ -22,18 +22,18 @@ void MathCatchupMoveInfo(float pos, float vel, float Aacc, int* direction, float
     int s3 = MathSign(vel);
     bool mustHalt = s1 != s2 || s1 == s3;
 
-    *direction = -s2;
+    *direction_out = -s2;
 
     // Edge case. Can happen if A halting directly to B position.
-    if (*direction == 0)
-        *direction = s1;
+    if (*direction_out == 0)
+        *direction_out = s1;
 
     if (mustHalt)
     {
         float area3 = MathAbs(pos2);
         float halfTime = MathSqrt(area3/Aacc);
-        *time1 = halfTime + haltTime;
-        *time2 = halfTime;
+        *time1_out = halfTime + haltTime;
+        *time2_out = halfTime;
     }
     else
     {
@@ -41,11 +41,11 @@ void MathCatchupMoveInfo(float pos, float vel, float Aacc, int* direction, float
         float area2 = posAbs;
         float area3 = area1+area2;
         float halfTime = MathSqrt(area3/Aacc);
-        *time1 = halfTime - haltTime;
-        *time2 = halfTime;
+        *time1_out = halfTime - haltTime;
+        *time2_out = halfTime;
 
         // Edge case. float calculation can be inaccurate when A is very close to B and results in negative time.
-        if (*time1 < 0) *time1 = 0;
+        if (*time1_out < 0) *time1_out = 0;
     }
 }
 void MathCatchup(float* Apos, float* Avel, float Aacc, float Bpos, float Bvel, float deltaTime)
