@@ -5,12 +5,18 @@
 #include "tools/Console.h"
 #include "tools/Window.h"
 
+enum AppState
+{
+    AppStateAuto,
+    AppStateManual
+};
+
 float Apos = WindowXLeft;
 float Bpos = WindowXCenter;
 float BposDist = WindowLineLength/2;
 float Avel = 0;
 float Bvel = 0;
-int BState = 0;
+int BState = AppStateAuto;
 
 float GetBvel()
 {
@@ -37,14 +43,14 @@ void UpdateB(float deltaTime)
 {
     switch (BState)
     {
-        case 0:
+        case AppStateAuto:
         {
             Bvel = GetBvel();
             BposDist += MathAbs(Bvel)*deltaTime;
             Bpos = WindowXLeft + MathPingPong(BposDist,WindowLineLength);
             break;
         }
-        case 1:
+        case AppStateManual:
         {
             Bpos = WindowMousePosition.x;
             Bvel = WindowMouseVelocity.x;
@@ -64,19 +70,17 @@ void HandleInput()
 }
 int main(void)
 {
-    WindowRender(Apos,Bpos);
     HandleInput();
-    TimeWaitLoopMark();
+    // Init();
+    WindowRender(Apos,Bpos);
 
     while (true)
     {
         if (WindowMustClose()) break;
 
-        Update(TimeFixedDeltaTimeFloat);
-
-        WindowRender(Apos,Bpos);
         HandleInput();
-        TimeWaitLoopMark();
+        Update(WindowFixedDeltaTime);
+        WindowRender(Apos,Bpos);
     }
 
     return 0;

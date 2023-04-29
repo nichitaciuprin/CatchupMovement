@@ -1,6 +1,6 @@
 #pragma once
 
-#include "raylib.h"
+#include <raylib.h>
 #include "Console.h"
 #include "stdbool.h"
 
@@ -8,6 +8,8 @@ bool WindowInited = false;
 Vector2 WindowMousePosition = {0,0};
 Vector2 WindowMouseVelocity = {0,0};
 
+const int WindowFPS = 60;
+const float WindowFixedDeltaTime = 1.0f/WindowFPS;
 const int WindowWidth = 1200;
 const int WindowHeight = 400;
 const int WindowOffset = 200;
@@ -31,6 +33,7 @@ void WindowCreate()
     if (WindowInited) return;
     WindowInited = true;
     InitWindow(WindowWidth, WindowHeight, "CatchupMovement");
+    SetTargetFPS(WindowFPS);
     ConsoleWriteLineStr("Window: Inited");
 }
 void WindowRender(float Apos, float Bpos)
@@ -58,7 +61,6 @@ void WindowRender2(float Apos, float Bpos, float Bvel)
     char buffer[64];
     snprintf(buffer, sizeof buffer, "%f", Bvel);
     DrawText(buffer,Bpos-5,WindowYCenter-35,20,WHITE);
-    // DrawText("B",Bpos-5,WindowYCenter-35,20,WHITE);
     EndDrawing();
 }
 void WindowClose()

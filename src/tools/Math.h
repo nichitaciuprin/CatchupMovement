@@ -2,7 +2,7 @@
 
 #include <stdlib.h>
 #include <math.h>
-#include "raymath.h"
+#include <raymath.h>
 
 #define MATH_M_PI_2 M_PI_2
 

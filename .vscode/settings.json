@@ -10,6 +10,7 @@
         "window.h": "c",
         "console.h": "c",
         "mathcatchup.h": "c",
-        "mathcatchup2.h": "c"
+        "mathcatchup2.h": "c",
+        "rlgl.h": "c"
     }
 }
