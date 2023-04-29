@@ -2,7 +2,50 @@
 
 #include <stdbool.h>
 #include <tools/Math.h>
+// TODO
+// #include <tools/Vector3.h>
 
+Vector3 MathCatchupTargetVelocity(Vector3 pos, Vector3 vel, float acc)
+{
+    if (pos.x == 0 && pos.y == 0 && pos.z == 0) return pos;
+
+    Vector3 direction = pos;
+    direction = Vector3Negate(direction);
+    direction = Vector3Normalize(direction);
+    float distance = Vector3Length(pos);
+    float speed = MathSqrt(distance*acc*2);
+
+    Vector3 result;
+    result = direction;
+    result.x *= speed; // TODO
+    result.y *= speed; // TODO
+    result.z *= speed; // TODO
+    result = Vector3Subtract(result,vel);
+    return result;
+}
+// TODO
+void MathCatchupDuno(Vector3* Apos, Vector3* Avel, float acc, Vector3 Bpos, Vector3 Bvel, float deltaTime)
+{
+    Vector3 pos = Vector3Subtract(*Apos,Bpos);
+    Vector3 vel = Vector3Subtract(*Avel,Bvel);
+
+    Vector3 oldVel = *Avel;
+    Vector3 targetVelocity = MathCatchupTargetVelocity(pos,vel,acc);
+    Vector3 newVel = targetVelocity; // TODO MoveTowards(oldVel,targetVelocity,acc*deltaTime);
+    Vector3 normVel = Vector3Add(oldVel,newVel);
+    normVel.x /= 2; // TODO
+    normVel.y /= 2; // TODO
+    normVel.z /= 2; // TODO
+    Vector3 posChange = normVel;
+    posChange.x *= deltaTime; // TODO
+    posChange.y *= deltaTime; // TODO
+    posChange.z *= deltaTime; // TODO
+
+    *Apos = Vector3Add(*Apos,posChange);
+    *Avel = normVel;
+    // TODO
+    // Apos = Snap(Apos,Bpos);
+}
 void MathCatchupMove(float* pos, float* vel, float acc, int direction, float time)
 {
     float velOffset = direction*acc*time;

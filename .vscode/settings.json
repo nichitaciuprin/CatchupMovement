@@ -11,6 +11,7 @@
         "console.h": "c",
         "mathcatchup.h": "c",
         "mathcatchup2.h": "c",
-        "rlgl.h": "c"
+        "rlgl.h": "c",
+        "vector2.h": "c"
     }
 }
