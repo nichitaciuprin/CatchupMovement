@@ -10,7 +10,7 @@ warnings='
 -Wno-unused -Wno-variadic-macros -Wno-parentheses
 -Wundef -fdiagnostics-show-option'
 
-include=./src/tools
+include=./src
 
 # echo $include
 cc main.c -o build/main -g -I$include $libs $warnings

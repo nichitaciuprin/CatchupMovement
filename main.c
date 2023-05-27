@@ -71,7 +71,6 @@ void HandleInput()
 int main(void)
 {
     HandleInput();
-    // Init();
     WindowRender(Apos,Bpos);
 
     while (true)
@@ -80,7 +79,7 @@ int main(void)
 
         HandleInput();
         Update(WindowFixedDeltaTime);
-        WindowRender(Apos,Bpos);
+ 	WindowRender(Apos,Bpos);
     }
 
     return 0;
