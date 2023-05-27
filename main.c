@@ -79,7 +79,7 @@ int main(void)
 
         HandleInput();
         Update(WindowFixedDeltaTime);
- 	WindowRender(Apos,Bpos);
+    	WindowRender(Apos,Bpos);
     }
 
     return 0;
