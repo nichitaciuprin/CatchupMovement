@@ -1,9 +1,4 @@
-#include "tools/Vector2.h"
-#include "tools/Math.h"
-#include "tools/MathCatchup.h"
-#include "tools/Time.h"
-#include "tools/Console.h"
-#include "tools/Window.h"
+#include <tools/Tools.h>
 
 enum AppState
 {
@@ -13,31 +8,36 @@ enum AppState
 
 float Apos = WindowXLeft;
 float Bpos = WindowXCenter;
-float BposDist = WindowLineLength/2;
+float BposDist = WindowLineLength / 2;
 float Avel = 0;
 float Bvel = 0;
 int BState = AppStateAuto;
 
 float GetBvel()
 {
-    float speed;
     float speed1 = 80;
-    float speed2 = speed1*2;
-    float speed3 = speed1*3;
+    float speed2 = speed1 * 2;
+    float speed3 = speed1 * 3;
+
     float range1 = 800;
-    float range2 = range1*2;
-    float range3 = range1*3;
-    float curentRange = MathMod(BposDist,range3);
+    float range2 = range1 * 2;
+    float range3 = range1 * 3;
+
+    float curentRange = MathMod(BposDist, range3);
+
+    float speed;
     if      (curentRange < range1) { speed = speed1; }
     else if (curentRange < range2) { speed = speed2; }
     else                           { speed = speed3; }
-    float mod = MathMod(BposDist,WindowLineLength*2);
+
+    float mod = MathMod(BposDist,WindowLineLength * 2);
     int direction = mod < WindowLineLength ? 1 : -1;
-    return speed*direction;
+
+    return speed * direction;
 }
 void UpdateA(float deltaTime)
 {
-    MathCatchup(&Apos,&Avel,500,Bpos,Bvel,deltaTime);
+    CatchupUpdate(&Apos, &Avel, 500, Bpos, Bvel, deltaTime);
 }
 void UpdateB(float deltaTime)
 {
@@ -46,8 +46,8 @@ void UpdateB(float deltaTime)
         case AppStateAuto:
         {
             Bvel = GetBvel();
-            BposDist += MathAbs(Bvel)*deltaTime;
-            Bpos = WindowXLeft + MathPingPong(BposDist,WindowLineLength);
+            BposDist += MathAbs(Bvel) * deltaTime;
+            Bpos = WindowXLeft + MathPingPong(BposDist, WindowLineLength);
             break;
         }
         case AppStateManual:
@@ -71,15 +71,13 @@ void HandleInput()
 int main(void)
 {
     HandleInput();
-    WindowRender(Apos,Bpos);
+    WindowRender(Apos, Bpos);
 
-    while (true)
+    while (!WindowMustClose())
     {
-        if (WindowMustClose()) break;
-
         HandleInput();
         Update(WindowFixedDeltaTime);
-    	WindowRender(Apos,Bpos);
+    	WindowRender(Apos, Bpos);
     }
 
     return 0;

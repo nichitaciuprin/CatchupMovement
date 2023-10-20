@@ -1,5 +1,5 @@
 # makes execution stop on error
-set -e
+# set -e
 
 libs='-lraylib -lGL -lm -lpthread -ldl -lrt -lX11'
 
@@ -10,9 +10,11 @@ warnings='
 -Wno-unused -Wno-variadic-macros -Wno-parentheses
 -Wundef -fdiagnostics-show-option'
 
-include=./src
+include=../../include
 
-# echo $include
+rm -r build
+mkdir build
+
 cc main.c -o build/main -g -I$include $libs $warnings
 
-./build/main
+# ./main
