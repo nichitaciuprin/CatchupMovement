@@ -7,7 +7,7 @@ void CatchupMove(float* pos, float* vel, float acc, int direction, float time)
     *vel += velocityOffset;
     *pos += positionOffset;
 }
-void CatchupInfo(float pos, float vel, float Aacc, int* direction_out, float* time1_out, float* time2_out)
+void CatchupInfo(float pos, float vel, float Aacc, int* outDirection, float* outTime1, float* outTime2)
 {
     float posAbs = MathAbs(pos);
     float velAbs = MathAbs(vel);
@@ -19,18 +19,18 @@ void CatchupInfo(float pos, float vel, float Aacc, int* direction_out, float* ti
     int s3 = MathSign(vel);
     bool mustHalt = s1 != s2 || s1 == s3;
 
-    *direction_out = -s2;
+    *outDirection = -s2;
 
     // can happen if A halting directly to B position.
-    if (*direction_out == 0)
-        *direction_out = s1;
+    if (*outDirection == 0)
+        *outDirection = s1;
 
     if (mustHalt)
     {
         float area3 = MathAbs(pos2);
         float halfTime = MathSqrt(area3 / Aacc);
-        *time1_out = halfTime + haltTime;
-        *time2_out = halfTime;
+        *outTime1 = halfTime + haltTime;
+        *outTime2 = halfTime;
     }
     else
     {
@@ -38,17 +38,20 @@ void CatchupInfo(float pos, float vel, float Aacc, int* direction_out, float* ti
         float area2 = posAbs;
         float area3 = area1 + area2;
         float halfTime = MathSqrt(area3 / Aacc);
-        *time1_out = halfTime - haltTime;
-        *time2_out = halfTime;
+        *outTime1 = halfTime - haltTime;
+        *outTime2 = halfTime;
 
-        // float calculation can be inaccurate when A is very close to B and results in negative time.
-        if (*time1_out < 0) *time1_out = 0;
+        // float calculation can be inaccurate
+        // when A is very close to B and results in negative time.
+        if (*outTime1 < 0)
+            *outTime1 = 0;
     }
 }
 void CatchupUpdate(float* Apos, float* Avel, float Aacc, float Bpos, float Bvel, float deltaTime)
 {
     float pos = *Apos - Bpos;
     float vel = *Avel - Bvel;
+
     int direction = 0;
     float time1 = 0;
     float time2 = 0;

@@ -12,7 +12,7 @@ warnings='
 
 include=../../include
 
-rm -r build
+rm -rf build
 mkdir build
 
 cc main.c -o build/main -g -I$include $libs $warnings
