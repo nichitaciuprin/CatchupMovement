@@ -26,6 +26,7 @@ float GetBvel()
     float curentRange = MathMod(BposDist, range3);
 
     float speed;
+
     if      (curentRange < range1) { speed = speed1; }
     else if (curentRange < range2) { speed = speed2; }
     else                           { speed = speed3; }
@@ -68,8 +69,11 @@ void HandleInput()
     if (IsKeyPressed('1')) { BState = 0; return; }
     if (IsKeyPressed('2')) { BState = 1; return; }
 }
-int main(void)
+int main()
 {
+    // testing gdb stacktrace on segfault
+    // *(char*)NULL = 0;
+
     HandleInput();
     WindowRender(Apos, Bpos);
 

@@ -11,9 +11,7 @@ set warnings=^
 -Wno-unused -Wno-variadic-macros -Wno-parentheses ^
 -Wundef -fdiagnostics-show-option
 
-@REM set optimisationlevel=-O3
-@REM set optimisationlevel=-Og
-set optimisationlevel=-O0
+set optimisationlevel=-O3
 
 set include=../../include
 
@@ -22,8 +20,5 @@ set appname=main
 if not exist build (mkdir build)
 
 gcc %appname%.c -o build/%appname%.exe -g3 -I%include% %libs% %warnings% %optimisationlevel%
-
-@REM gcc -c main.c -o main.o -g3 -I%include% %libs% %warnings% %optimisationlevel%
-@REM gcc main.o -o main.exe -g3 -I%include% %libs% %warnings% %optimisationlevel%
 
 if errorlevel 1 exit /b %errorlevel%
